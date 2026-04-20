@@ -11,6 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Controle Pessoal",
   description: "Seu controle pessoal premium",
+  themeColor: "#06070f",
 };
 
 export const viewport = {
