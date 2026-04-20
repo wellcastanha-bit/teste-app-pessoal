@@ -35,6 +35,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
   overscroll-behavior: none;
+  padding-top: env(safe-area-inset-top);
 }
 
 button { font-family: inherit; }
