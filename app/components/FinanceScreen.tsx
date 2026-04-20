@@ -6,6 +6,7 @@ type EntryType = "expense" | "income" | "invest" | "transfer";
 
 // ─── AddEntrySheet ────────────────────────────────────────────────────────────
 const CATS: Record<EntryType, { label: string; icon: string; color: string }[]> = {
+  transfer: [],
   expense: [
     { label: "Operacional", icon: "⚙️", color: "#00d4ff" },
     { label: "Alimentação", icon: "🍽️", color: "#f59e0b" },
