@@ -2,6 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import FinanceScreen from "./components/FinanceScreen";
 import TasksScreen from "./components/TasksScreen";
+import GoalsScreen from "./components/GoalsScreen";
+import PerformanceScreen from "./components/PerformanceScreen";
+import DietScreen from "./components/DietScreen";
 
 function useCountUp(target: number, duration = 1400, startOnMount = true) {
   const [value, setValue] = useState(0);
@@ -290,7 +293,7 @@ const TABS = [
 /* ─── Page ─── */
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
-  const [screen, setScreen] = useState<"home" | "finance" | "tasks">("home");
+  const [screen, setScreen] = useState<"home" | "finance" | "tasks" | "goals" | "performance" | "diet">("home");
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -315,6 +318,9 @@ export default function Home() {
 
   if (screen === "finance") return <FinanceScreen onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
   if (screen === "tasks")   return <TasksScreen   onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
+  if (screen === "goals")       return <GoalsScreen       onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
+  if (screen === "performance") return <PerformanceScreen onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
+  if (screen === "diet")        return <DietScreen        onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
 
   return (
     <main className="app-root">
@@ -357,6 +363,9 @@ export default function Home() {
                 onClick={() => {
                   if (card.id === "finance") setScreen("finance");
                   if (card.id === "tasks")   setScreen("tasks");
+                  if (card.id === "goals")       setScreen("goals");
+                  if (card.id === "performance") setScreen("performance");
+                  if (card.id === "diet")        setScreen("diet");
                 }}
               >
                 {/* Top row: icon + ring/stat */}
