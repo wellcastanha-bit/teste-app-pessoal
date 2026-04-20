@@ -91,7 +91,7 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 20px) 28px 14px;
+  padding: calc(env(safe-area-inset-top) + 20px) 16px 14px;
   animation: fade-in 0.4s ease both;
 }
 
@@ -168,7 +168,7 @@ button { font-family: inherit; }
 
 /* ─── Section Label ─── */
 .section-label {
-  padding: 0 28px;
+  padding: 0 16px;
   margin-bottom: 14px;
   font-size: 0.72rem;
   font-weight: 700;
@@ -182,7 +182,7 @@ button { font-family: inherit; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  padding: 0 28px;
+  padding: 0 16px;
 }
 
 .module-card {

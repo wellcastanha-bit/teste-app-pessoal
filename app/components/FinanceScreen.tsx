@@ -775,7 +775,7 @@ export default function FinanceScreen({ onBack }: { onBack: () => void }) {
       <div style={{ maxWidth: 480, margin: "0 auto", position: "relative", zIndex: 1, paddingBottom: 120 }}>
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "20px 20px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "calc(env(safe-area-inset-top) + 20px) 20px 14px" }}>
           <button onClick={onBack} aria-label="Voltar" style={{
             width: 44, height: 44, borderRadius: 14, flexShrink: 0,
             background: "rgba(255,255,255,0.07)",
