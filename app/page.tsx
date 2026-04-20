@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import FinanceScreen from "./components/FinanceScreen";
+import TasksScreen from "./components/TasksScreen";
 
 function useCountUp(target: number, duration = 1400, startOnMount = true) {
   const [value, setValue] = useState(0);
@@ -289,7 +290,7 @@ const TABS = [
 /* ─── Page ─── */
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
-  const [screen, setScreen] = useState<"home" | "finance">("home");
+  const [screen, setScreen] = useState<"home" | "finance" | "tasks">("home");
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -312,9 +313,8 @@ export default function Home() {
   const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
   const greetingEmoji = hour < 12 ? "☀️" : hour < 18 ? "🌤️" : "🌙";
 
-  if (screen === "finance") {
-    return <FinanceScreen onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
-  }
+  if (screen === "finance") return <FinanceScreen onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
+  if (screen === "tasks")   return <TasksScreen   onBack={() => { setScreen("home"); setActiveTab("home"); }} />;
 
   return (
     <main className="app-root">
@@ -337,154 +337,126 @@ export default function Home() {
         </header>
 
 
-        {/* Cards */}
+        {/* Cards — grid 2×4 */}
         <div className="section-label">Acesso Rápido</div>
         <div className="cards-list">
-          {CARDS.map((card, i) => (
-            <div
-              key={card.id}
-              className="module-card"
-              style={{ animationDelay: `${i * 90 + 100}ms` }}
-              onClick={() => { if (card.id === "finance") setScreen("finance"); }}
-            >
-              <div className="module-card-top">
-                <div
-                  className="module-icon"
-                  style={{ background: `${card.accent}18`, borderColor: `${card.accent}28` }}
-                >
-                  <card.Icon />
+          {CARDS.map((card, i) => {
+            // stat value animado por tipo
+            const animStat =
+              card.extra === "performance" ? fmtMins(animatedPerfMins) :
+              card.extra === "diet"        ? `${fmt(animatedCalories)} kcal` :
+              card.extra === "exercise"    ? fmtMins(animatedExMins) :
+              card.extra === "reading"     ? `${animatedPages} pág.` :
+              card.statValue;
+
+            return (
+              <div
+                key={card.id}
+                className="module-card"
+                style={{ animationDelay: `${i * 70 + 80}ms`, display: "flex", flexDirection: "column", minHeight: 190 }}
+                onClick={() => {
+                  if (card.id === "finance") setScreen("finance");
+                  if (card.id === "tasks")   setScreen("tasks");
+                }}
+              >
+                {/* Top row: icon + ring/stat */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
+                  <div
+                    className="module-icon"
+                    style={{ width: 42, height: 42, borderRadius: 13, background: `${card.accent}18`, borderColor: `${card.accent}30`, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+                  >
+                    <card.Icon />
+                  </div>
+                  {card.extra === "ring" ? (
+                    <Ring value={card.progress!} color={card.accent} />
+                  ) : card.extra === "exercise" ? (
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: "0.62rem", color: "var(--text-secondary)", fontWeight: 500, marginBottom: 2 }}>Sequência de:</div>
+                      <div style={{ fontSize: "0.88rem", fontWeight: 800, color: card.accent, letterSpacing: "-0.02em", lineHeight: 1.2 }}>3 dias</div>
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: "1.05rem", fontWeight: 800, color: card.accent, letterSpacing: "-0.025em", lineHeight: 1.1 }}>{animStat}</div>
+                      <div style={{ fontSize: "0.62rem", color: "var(--text-secondary)", marginTop: 3, fontWeight: 500 }}>{card.statLabel}</div>
+                    </div>
+                  )}
                 </div>
 
-                {card.extra === "ring" ? (
-                  <Ring value={card.progress!} color={card.accent} />
-                ) : (
-                  <div className="module-stat">
-                    <div className="module-stat-value" style={{ color: card.accent }}>{card.statValue}</div>
-                    <div className="module-stat-label">{card.statLabel}</div>
+                {/* Title + desc */}
+                <div style={{ marginBottom: 10, flex: 1 }}>
+                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.015em", marginBottom: 3, lineHeight: 1.2 }}>{card.title}</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)", fontWeight: 400, lineHeight: 1.3 }}>{card.description}</div>
+                </div>
+
+                {/* Mini indicator */}
+                {(card.extra === "progress" || card.extra === "ring" || card.extra === "performance" || card.extra === "reading") && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
+                    <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
+                      <div style={{ width: mounted ? `${card.progress}%` : "0%", height: "100%", background: card.accent, borderRadius: 2, transition: "width 1s cubic-bezier(.4,0,.2,1)", boxShadow: `0 0 6px ${card.accent}55` }} />
+                    </div>
+                    <span style={{ fontSize: "0.68rem", fontWeight: 700, color: card.accent, flexShrink: 0 }}>{card.progress}%</span>
                   </div>
                 )}
-              </div>
 
-              <div className="module-info">
-                <div className="module-title">{card.title}</div>
-                <div className="module-desc">{card.description}</div>
-              </div>
-
-              {card.extra === "trend" && card.sparkline && (
-                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "14px" }}>
-                  <div className={`trend-badge ${card.trendUp ? "up" : "down"}`}>
-                    {card.trendUp ? "↑" : "↓"} {card.trend} este mês
-                  </div>
-                  <Sparkline values={card.sparkline} color={card.accent} />
-                </div>
-              )}
-
-              {(card.extra === "progress" || card.extra === "ring") && (
-                <div className="module-progress">
-                  <div className="progress-bar">
-                    <div
-                      className="progress-fill"
-                      style={{
-                        width: mounted ? `${card.progress}%` : "0%",
-                        background: card.accent,
-                        boxShadow: `0 0 8px ${card.accent}60`,
-                      }}
-                    />
-                  </div>
-                  <span className="progress-pct">{card.progress}%</span>
-                </div>
-              )}
-
-              {card.extra === "performance" && (
-                <>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                    <span style={{ fontSize: "1.4rem", fontWeight: 800, color: card.accent, letterSpacing: "-0.03em" }}>
-                      {fmtMins(animatedPerfMins)}
+                {card.extra === "trend" && card.sparkline && (
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 10 }}>
+                    <span style={{ fontSize: "0.65rem", fontWeight: 700, color: card.accent, background: `${card.accent}18`, border: `1px solid ${card.accent}30`, padding: "3px 8px", borderRadius: 20, backdropFilter: "blur(12px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)" }}>
+                      {card.trendUp ? "↑" : "↓"} {card.trend?.replace(" este mês","").replace(" esta semana","")}
                     </span>
-                    <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", fontWeight: 600 }}>
-                      {card.progress}% da meta
-                    </span>
+                    <Sparkline values={card.sparkline} color={card.accent} />
                   </div>
-                  <div className="module-progress" style={{ marginBottom: "12px" }}>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: mounted ? `${card.progress}%` : "0%", background: card.accent, boxShadow: `0 0 8px ${card.accent}60` }} />
+                )}
+
+                {card.extra === "exercise" && card.sparkline && (
+                  <div style={{ marginBottom: 10 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 4 }}>
+                      {["S","T","Q","Q","S","S","D"].map((day, idx) => {
+                        const active = (card.sparkline![idx] ?? 0) > 0;
+                        return (
+                          <div key={idx} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                            <div style={{
+                              width: "100%", aspectRatio: "1", borderRadius: 8,
+                              background: active ? card.accent : "rgba(255,255,255,0.07)",
+                              backdropFilter: "blur(12px)",
+                              WebkitBackdropFilter: "blur(12px)",
+                              border: active ? `1px solid ${card.accent}88` : "1px solid rgba(255,255,255,0.12)",
+                              boxShadow: active ? `inset 0 1px 0 rgba(255,255,255,0.3), 0 0 8px ${card.accent}44` : "inset 0 1px 0 rgba(255,255,255,0.1)",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                            }}>
+                              {active && (
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none">
+                                  <path d="M20 6L9 17l-5-5" stroke="rgba(0,0,0,0.7)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              )}
+                            </div>
+                            <span style={{ fontSize: "0.55rem", fontWeight: 600, color: active ? card.accent : "rgba(255,255,255,0.25)" }}>{day}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <span className="progress-pct">{card.progress}%</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "14px" }}>
-                    <div className={`trend-badge ${card.trendUp ? "up" : "down"}`}>
-                      {card.trendUp ? "↑" : "↓"} {card.trend}
-                    </div>
-                    <Sparkline values={card.sparkline!} color={card.accent} />
-                  </div>
-                </>
-              )}
+                )}
 
-              {card.extra === "diet" && (
-                <>
-                  <div style={{ marginBottom: "4px" }}>
-                    <span style={{ fontSize: "1.5rem", fontWeight: 800, color: card.accent, letterSpacing: "-0.03em" }}>
-                      {fmt(animatedCalories)}
-                    </span>
-                    <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginLeft: "6px", fontWeight: 500 }}>kcal</span>
-                  </div>
-                  <div style={{ marginBottom: "14px", marginTop: "12px" }}>
-                    {card.macros!.map((m) => (
-                      <MacroBar key={m.label} label={m.label} current={m.current} goal={m.goal} color={m.color} mounted={mounted} />
+                {card.extra === "diet" && (
+                  <div style={{ marginBottom: 10 }}>
+                    {card.macros!.slice(0,2).map(m => (
+                      <div key={m.label} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
+                        <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontWeight: 500, width: 56, flexShrink: 0 }}>{m.label}</span>
+                        <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
+                          <div style={{ width: mounted ? `${Math.round((m.current/m.goal)*100)}%` : "0%", height: "100%", background: m.color, borderRadius: 2, transition: "width 1s cubic-bezier(.4,0,.2,1)" }} />
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </>
-              )}
+                )}
 
-              {card.extra === "exercise" && (
-                <>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                    <span style={{ fontSize: "1.4rem", fontWeight: 800, color: card.accent, letterSpacing: "-0.03em" }}>
-                      {fmtMins(animatedExMins)}
-                    </span>
-                    <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", fontWeight: 600 }}>
-                      total treinado
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "14px" }}>
-                    <div className="trend-badge up">
-                      🔥 {card.trend}
-                    </div>
-                    <Sparkline values={card.sparkline!} color={card.accent} />
-                  </div>
-                </>
-              )}
-
-              {card.extra === "reading" && (
-                <>
-                  <div style={{ marginBottom: "10px" }}>
-                    <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px", letterSpacing: "-0.01em" }}>
-                      📖 {card.book}
-                    </div>
-                    <div className="module-progress" style={{ marginBottom: "6px" }}>
-                      <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: mounted ? `${card.progress}%` : "0%", background: card.accent, boxShadow: `0 0 8px ${card.accent}60` }} />
-                      </div>
-                      <span className="progress-pct" style={{ color: card.accent }}>{card.progress}%</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: "0.72rem", color: "var(--text-secondary)", fontWeight: 500 }}>
-                        Hoje: <span style={{ color: card.accent, fontWeight: 700 }}>{animatedPages} pág.</span>
-                      </span>
-                      <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                        Meta: {card.pagesGoal} pág.
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: "14px" }} />
-                </>
-              )}
-
-              <div className="module-arrow" style={{ color: card.accent }}>
-                Abrir <ChevronRight color={card.accent} />
+                {/* Footer */}
+                <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", fontWeight: 600, color: card.accent }}>
+                  Abrir <ChevronRight color={card.accent} />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -497,6 +469,7 @@ export default function Home() {
             onClick={() => {
               setActiveTab(id);
               if (id === "finance") setScreen("finance");
+              if (id === "tasks")   setScreen("tasks");
             }}
             aria-label={label}
           >
