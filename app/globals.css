@@ -39,7 +39,6 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
   overscroll-behavior: none;
-  padding-top: env(safe-area-inset-top);
 }
 
 button { font-family: inherit; }
@@ -92,7 +91,7 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 28px 14px;
+  padding: calc(env(safe-area-inset-top) + 20px) 28px 14px;
   animation: fade-in 0.4s ease both;
 }
 
