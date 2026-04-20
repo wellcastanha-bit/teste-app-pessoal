@@ -460,24 +460,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Bottom Nav */}
-      <nav className="bottom-nav">
-        {TABS.map(({ id, label, Icon }) => (
-          <button
-            key={id}
-            className={`nav-item ${activeTab === id ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab(id);
-              if (id === "finance") setScreen("finance");
-              if (id === "tasks")   setScreen("tasks");
-            }}
-            aria-label={label}
-          >
-            <Icon />
-            <span>{label}</span>
-          </button>
-        ))}
-      </nav>
     </main>
   );
 }

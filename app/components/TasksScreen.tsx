@@ -820,22 +820,18 @@ export default function TasksScreen({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* FAB */}
-      <div style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:200, pointerEvents:"none" }}>
-        <div style={{ maxWidth:480, margin:"0 auto", position:"relative", height:100 }}>
-          <button onClick={()=>setSheet(true)} style={{
-            position:"absolute", bottom:24, right:20,
-            width:58, height:58, borderRadius:19, pointerEvents:"all", cursor:"pointer",
-            background:"rgba(167,139,250,0.18)", backdropFilter:"blur(28px) saturate(180%)", WebkitBackdropFilter:"blur(28px) saturate(180%)",
-            border:"1px solid rgba(167,139,250,0.35)",
-            boxShadow:"0 8px 32px rgba(167,139,250,0.25), inset 0 1px 0 rgba(255,255,255,0.2)",
-            display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s",
-          }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="#a78bfa" strokeWidth="2.4" strokeLinecap="round"/>
-            </svg>
-          </button>
-        </div>
-      </div>
+      <button onClick={()=>setSheet(true)} style={{
+        position:"fixed", bottom:32, right:24, zIndex:200,
+        width:58, height:58, borderRadius:19, cursor:"pointer",
+        background:"rgba(167,139,250,0.18)", backdropFilter:"blur(28px) saturate(180%)", WebkitBackdropFilter:"blur(28px) saturate(180%)",
+        border:"1px solid rgba(167,139,250,0.35)",
+        boxShadow:"0 8px 32px rgba(167,139,250,0.25), inset 0 1px 0 rgba(255,255,255,0.2)",
+        display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s",
+      }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14M5 12h14" stroke="#a78bfa" strokeWidth="2.4" strokeLinecap="round"/>
+        </svg>
+      </button>
 
       <AddTaskSheet open={sheet} onClose={()=>setSheet(false)} onAdd={addTask}/>
       <EditTaskSheet task={editTask} onClose={()=>setEditTask(null)} onSave={saveEdit}/>

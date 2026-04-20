@@ -1219,31 +1219,25 @@ export default function FinanceScreen({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* ── FAB ─────────────────────────────────────────────────────────────── */}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, pointerEvents: "none" }}>
-        <div style={{ maxWidth: 480, margin: "0 auto", position: "relative", height: 100 }}>
-          <button
-            onClick={() => setSheet("expense")}
-            aria-label="Nova transação"
-            style={{
-              position: "absolute", bottom: 24, right: 20,
-              width: 60, height: 60, borderRadius: 20,
-              pointerEvents: "all", cursor: "pointer",
-              /* Apple glass */
-              background: "rgba(255,255,255,0.13)",
-              backdropFilter: "blur(28px) saturate(180%)",
-              WebkitBackdropFilter: "blur(28px) saturate(180%)",
-              border: "1px solid rgba(255,255,255,0.22)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 0 0.5px rgba(255,255,255,0.08)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s",
-            }}
-          >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.95)" strokeWidth="2.4" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={() => setSheet("expense")}
+        aria-label="Nova transação"
+        style={{
+          position: "fixed", bottom: 32, right: 24, zIndex: 200,
+          width: 60, height: 60, borderRadius: 20, cursor: "pointer",
+          background: "rgba(255,255,255,0.13)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
+          border: "1px solid rgba(255,255,255,0.22)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 0 0.5px rgba(255,255,255,0.08)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+      >
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.95)" strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
+      </button>
 
       {/* ── Bottom Sheet ─────────────────────────────────────────────────────── */}
       <AddEntrySheet
